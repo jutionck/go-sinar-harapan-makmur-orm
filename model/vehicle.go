@@ -12,6 +12,10 @@ type Vehicle struct {
 	BaseModel
 }
 
+func (Vehicle) TableName() string {
+	return "mst_vehicle"
+}
+
 func (v *Vehicle) IsValidStatus() bool {
 	return v.Status == "Baru" || v.Status == "Bekas"
 }
