@@ -11,6 +11,7 @@ import (
 
 type DbConnection interface {
 	Conn() *gorm.DB
+	Migrate(model ...any) error
 }
 
 type dbConnection struct {
@@ -36,8 +37,8 @@ func (d *dbConnection) Conn() *gorm.DB {
 	return d.db
 }
 
-func DbMigrate(db *gorm.DB, model ...any) error {
-	err := db.AutoMigrate(model...)
+func (d *dbConnection) Migrate(model ...any) error {
+	err := d.Conn().AutoMigrate(model...)
 	if err != nil {
 		return err
 	}
