@@ -40,12 +40,12 @@ func (v *vehicleRepository) Get(id string) (*model.Vehicle, error) {
 	return &vehicle, nil
 }
 
-func (v *vehicleRepository) Save(payload *model.Vehicle) (*model.Vehicle, error) {
+func (v *vehicleRepository) Save(payload *model.Vehicle) error {
 	result := v.db.Save(payload)
 	if err := result.Error; err != nil {
-		return nil, err
+		return err
 	}
-	return payload, nil
+	return nil
 }
 
 func (v *vehicleRepository) Delete(id string) error {

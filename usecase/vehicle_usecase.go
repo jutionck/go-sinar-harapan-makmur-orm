@@ -6,39 +6,30 @@ import (
 )
 
 type VehicleUseCase interface {
-	SearchVehicle(by map[string]interface{}) ([]model.Vehicle, error)
-	FindAllVehicle() ([]model.Vehicle, error)
-	FindVehicleById(id string) (*model.Vehicle, error)
-	SaveVehicle(payload *model.Vehicle) (*model.Vehicle, error)
-	DeleteVehicle(id string) error
+	BaseUseCase[model.Vehicle]
 }
 
 type vehicleUseCase struct {
 	repo repository.VehicleRepository
 }
 
-// SearchVehicle implements VehicleUseCase
-func (v *vehicleUseCase) SearchVehicle(by map[string]interface{}) ([]model.Vehicle, error) {
+func (v *vehicleUseCase) SearchBy(by map[string]interface{}) ([]model.Vehicle, error) {
 	return v.repo.Search(by)
 }
 
-// FindAllVehicle implements VehicleUseCase
-func (v *vehicleUseCase) FindAllVehicle() ([]model.Vehicle, error) {
+func (v *vehicleUseCase) FindAll() ([]model.Vehicle, error) {
 	return v.repo.List()
 }
 
-// FindVehicleById implements VehicleUseCase
-func (v *vehicleUseCase) FindVehicleById(id string) (*model.Vehicle, error) {
+func (v *vehicleUseCase) FindById(id string) (*model.Vehicle, error) {
 	return v.repo.Get(id)
 }
 
-// SaveVehicle implements VehicleUseCase
-func (v *vehicleUseCase) SaveVehicle(payload *model.Vehicle) (*model.Vehicle, error) {
+func (v *vehicleUseCase) SaveData(payload *model.Vehicle) error {
 	return v.repo.Save(payload)
 }
 
-// DeleteVehicle implements VehicleUseCase
-func (v *vehicleUseCase) DeleteVehicle(id string) error {
+func (v *vehicleUseCase) DeleteData(id string) error {
 	return v.repo.Delete(id)
 }
 
