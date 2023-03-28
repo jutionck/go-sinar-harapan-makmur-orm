@@ -6,7 +6,7 @@ import (
 )
 
 type Vehicle struct {
-	Brand          string `gorm:"varchar;size:30"`
+	BrandID        string
 	Model          string `gorm:"varchar;size:30"`
 	ProductionYear int    `gorm:"size:4"`
 	Color          string `gorm:"varchar;size:30"`
