@@ -7,3 +7,8 @@ type BaseRepository[T any] interface {
 	Save(payload *T) error
 	Delete(id string) error
 }
+
+type BaseRepositoryEmailPhone[T any] interface {
+	GetByEmail(email string) (*T, error)
+	GetByPhone(phone string) (*T, error)
+}

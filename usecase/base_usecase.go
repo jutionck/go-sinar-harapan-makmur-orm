@@ -7,3 +7,8 @@ type BaseUseCase[T any] interface {
 	SaveData(payload *T) error
 	DeleteData(id string) error
 }
+
+type BaseUseCaseEmailPhone[T any] interface {
+	FindByEmail(email string) (*T, error)
+	FindByPhone(phone string) (*T, error)
+}
