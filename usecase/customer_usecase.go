@@ -43,6 +43,7 @@ func (c *customerUseCase) SaveData(payload *model.Customer) error {
 			return fmt.Errorf("Customer with ID %s not found!", payload.ID)
 		}
 	}
+
 	return c.repo.Save(payload)
 }
 

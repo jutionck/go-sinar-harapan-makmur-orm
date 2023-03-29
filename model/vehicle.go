@@ -13,7 +13,7 @@ type Vehicle struct {
 	IsAutomatic    bool   `gorm:"default:true"`
 	Stock          int    `gorm:"check:stock >= 0"`
 	SalePrice      int    `gorm:"check:sale_price > 0"`
-	Status         string `gorm:"check:status IN ('Baru', 'Bekas')"`
+	Status         string `gorm:"check:status IN ('baru', 'bekas')"`
 	BaseModel
 }
 
@@ -22,7 +22,7 @@ func (Vehicle) TableName() string {
 }
 
 func (v *Vehicle) IsValidStatus() bool {
-	return v.Status == "Baru" || v.Status == "Bekas"
+	return v.Status == "baru" || v.Status == "bekas"
 }
 
 func (v *Vehicle) BeforeCreate(tx *gorm.DB) error {
