@@ -1,13 +1,18 @@
 package repository
 
 import (
+	"errors"
+	"fmt"
+
 	"github.com/jutionck/golang-db-sinar-harapan-makmur-orm/model"
+	"github.com/jutionck/golang-db-sinar-harapan-makmur-orm/utils"
 	"gorm.io/gorm"
 )
 
 type UserRepository interface {
 	BaseRepository[model.UserCredential]
 	GetByUsername(username string) (*model.UserCredential, error)
+	GetByUsernamePassword(username string, password string) (*model.UserCredential, error)
 }
 
 type userRepository struct {
@@ -51,11 +56,27 @@ func (u *userRepository) Delete(id string) error {
 
 func (u *userRepository) GetByUsername(username string) (*model.UserCredential, error) {
 	var userCredential model.UserCredential
-	result := u.db.First(&userCredential, "username=? and is_active = true", username).Error
-	if result != nil {
-		return nil, result
+	result := u.db.Where("user_name = ?", username).Where("is_active = ?", true).First(&userCredential)
+	if err := result.Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("user with username '%s' not found", username)
+		}
+		return nil, fmt.Errorf("failed to get user with username '%s': %v", username, err)
 	}
 	return &userCredential, nil
+}
+
+func (u *userRepository) GetByUsernamePassword(username string, password string) (*model.UserCredential, error) {
+	user, err := u.GetByUsername(username)
+	if err != nil {
+		return nil, err
+	}
+
+	pwdCheck := utils.CheckPasswordHash(password, user.Password)
+	if !pwdCheck {
+		return nil, fmt.Errorf("Password don't match")
+	}
+	return user, nil
 }
 
 func NewUserRepository(db *gorm.DB) UserRepository {

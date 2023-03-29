@@ -1,10 +1,13 @@
 package usecase
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/jutionck/golang-db-sinar-harapan-makmur-orm/model"
 	"github.com/jutionck/golang-db-sinar-harapan-makmur-orm/repository"
+	"github.com/jutionck/golang-db-sinar-harapan-makmur-orm/utils"
+	"gorm.io/gorm"
 )
 
 type UserUseCase interface {
@@ -40,9 +43,21 @@ func (u *userUseCase) SaveData(payload *model.UserCredential) error {
 	if payload.ID != "" {
 		_, err := u.FindById(payload.ID)
 		if err != nil {
-			return fmt.Errorf("User with ID %s not found!", payload.ID)
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return fmt.Errorf("user with ID '%s' not found", payload.ID)
+			}
+			return fmt.Errorf("failed to check user with ID '%s': %v", payload.ID, err)
 		}
 	}
+
+	if payload.Password != "" {
+		password, err := utils.HashPassword(payload.Password)
+		if err != nil {
+			return err
+		}
+		payload.Password = password
+	}
+
 	return u.repo.Save(payload)
 }
 
