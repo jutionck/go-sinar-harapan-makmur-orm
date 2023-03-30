@@ -11,8 +11,8 @@ type Customer struct {
 	PhoneNumber      string `gorm:"unique;size:15"`
 	Bod              time.Time
 	UserCredentialID string
-	UserCredential   UserCredential
-	Vehicles         []*Vehicle `gorm:"many2many:customer_vehicles;"`
+	UserCredential   UserCredential `gorm:"foreignKey:UserCredentialID"`
+	Vehicles         []*Vehicle     `gorm:"many2many:customer_vehicles;"`
 }
 
 func (Customer) TableName() string {
