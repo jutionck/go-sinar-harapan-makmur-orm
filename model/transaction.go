@@ -6,12 +6,12 @@ type Transaction struct {
 	BaseModel
 	TransactionDate time.Time
 	VehicleID       string
-	Vehicle         Vehicle
+	Vehicle         Vehicle `gorm:"foreignKey:VehicleID"`
 	CustomerID      string
-	Customer        Customer
+	Customer        Customer `gorm:"foreignKey:CustomerID"`
 	EmployeeID      string
-	Employee        Employee
-	Type            string `gorm:"check:type IN ('online', 'offline')"`
+	Employee        Employee `gorm:"foreignKey:EmployeeID"`
+	Type            string   `gorm:"check:type IN ('online', 'offline')"`
 	Qty             int
 	PaymentAmount   int64
 }

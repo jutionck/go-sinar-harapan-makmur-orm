@@ -15,7 +15,7 @@ type Employee struct {
 	ManagerID        *string
 	Manager          *Employee `gorm:"foreignKey:ManagerID"`
 	UserCredentialID string
-	UserCredential   UserCredential
+	UserCredential   UserCredential `gorm:"foreignKey:UserCredentialID;unique"`
 }
 
 func (Employee) TableName() string {
