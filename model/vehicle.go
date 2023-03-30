@@ -7,13 +7,14 @@ import (
 
 type Vehicle struct {
 	BrandID        string
-	Model          string `gorm:"varchar;size:30"`
-	ProductionYear int    `gorm:"size:4"`
-	Color          string `gorm:"varchar;size:30"`
-	IsAutomatic    bool   `gorm:"default:true"`
-	Stock          int    `gorm:"check:stock >= 0"`
-	SalePrice      int    `gorm:"check:sale_price > 0"`
-	Status         string `gorm:"check:status IN ('baru', 'bekas')"`
+	Model          string      `gorm:"varchar;size:30"`
+	ProductionYear int         `gorm:"size:4"`
+	Color          string      `gorm:"varchar;size:30"`
+	IsAutomatic    bool        `gorm:"default:true"`
+	Stock          int         `gorm:"check:stock >= 0"`
+	SalePrice      int         `gorm:"check:sale_price > 0"`
+	Status         string      `gorm:"check:status IN ('baru', 'bekas')"`
+	Customers      []*Customer `gorm:"many2many:customer_vehicles;"`
 	BaseModel
 }
 
