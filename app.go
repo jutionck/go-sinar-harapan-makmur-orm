@@ -2,11 +2,9 @@ package main
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/jutionck/golang-db-sinar-harapan-makmur-orm/config"
 	"github.com/jutionck/golang-db-sinar-harapan-makmur-orm/model"
-	"github.com/jutionck/golang-db-sinar-harapan-makmur-orm/utils"
 )
 
 func main() {
@@ -137,25 +135,25 @@ func main() {
 	// db.Create(&newCustomerVehicle)
 
 	// Assocuation Mode
-	password, err := utils.HashPassword("P@ssword")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	newCustomer := model.Customer{
-		FirstName:   "Suci",
-		LastName:    "Dalam Debu",
-		Address:     "Surabaya",
-		Email:       "suci.dalam@gmail.com",
-		PhoneNumber: "028292929",
-		Bod:         time.Date(1998, 1, 1, 0, 0, 0, 0, time.UTC),
-		UserCredential: model.UserCredential{
-			UserName: "suci.dalam@gmail.com",
-			Password: password,
-			IsActive: false,
-		},
-	}
-	db.Create(&newCustomer)
+	// password, err := utils.HashPassword("P@ssword")
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return
+	// }
+	// newCustomer := model.Customer{
+	// 	FirstName:   "Suci",
+	// 	LastName:    "Dalam Debu",
+	// 	Address:     "Surabaya",
+	// 	Email:       "suci.dalam@gmail.com",
+	// 	PhoneNumber: "028292929",
+	// 	Bod:         time.Date(1998, 1, 1, 0, 0, 0, 0, time.UTC),
+	// 	UserCredential: model.UserCredential{
+	// 		UserName: "suci.dalam@gmail.com",
+	// 		Password: password,
+	// 		IsActive: false,
+	// 	},
+	// }
+	// db.Create(&newCustomer)
 
 	// // Kedua kita cari vehicle yang mau ditambah
 	// var vehicle model.Vehicle
@@ -246,7 +244,7 @@ func main() {
 		fmt.Println(err)
 	}
 	var newVehicle model.Vehicle
-	if err := db.Debug().Where("id=?", "82a068e3-2367-4db0-b551-731e6bfd4e3a").First(&newVehicle).Error; err != nil {
+	if err := db.Debug().Preload("Customers").Where("id=?", "82a068e3-2367-4db0-b551-731e6bfd4e3a").First(&newVehicle).Error; err != nil {
 		fmt.Println(err)
 	}
 	var oldVehicleID = "ddba8c27-49b9-4d71-8233-2ebf1de56551"
