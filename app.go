@@ -137,7 +137,6 @@ func main() {
 	// db.Create(&newCustomerVehicle)
 
 	// Assocuation Mode
-
 	password, err := utils.HashPassword("P@ssword")
 	if err != nil {
 		fmt.Println(err)
@@ -158,14 +157,107 @@ func main() {
 	}
 	db.Create(&newCustomer)
 
-	// Kedua kita cari vehicle yang mau ditambah
-	var vehicle model.Vehicle
-	if err := db.Where("id=?", "ddba8c27-49b9-4d71-8233-2ebf1de56551").First(&vehicle).Error; err != nil {
+	// // Kedua kita cari vehicle yang mau ditambah
+	// var vehicle model.Vehicle
+	// if err := db.Where("id=?", "ddba8c27-49b9-4d71-8233-2ebf1de56551").First(&vehicle).Error; err != nil {
+	// 	fmt.Println(err)
+	// }
+
+	// // Kemudian kita lakukan append
+	// if err := db.Model(&vehicle).Association("Customers").Append(&newCustomer); err != nil {
+	// 	fmt.Println(err)
+	// }
+
+	// Menambahkan dengan customer dan kendaraan yang sudah ada, misalnya SUCI beli mobil baru lagi.
+	// var vehicle model.Vehicle
+	// if err := db.Debug().Where("id=?", "82a068e3-2367-4db0-b551-731e6bfd4e3a").First(&vehicle).Error; err != nil {
+	// 	fmt.Println(err)
+	// }
+
+	// var customer model.Customer
+	// if err := db.Debug().Where("id=?", "8114e6c6-81b5-4896-8dff-ff67d7ae12d2").First(&customer).Error; err != nil {
+	// 	fmt.Println(err)
+	// }
+
+	// if err := db.Debug().Model(&vehicle).Association("Customers").Append(&customer); err != nil {
+	// 	fmt.Println(err)
+	// }
+
+	// Customer menghapus kendaraan nya misalnya
+	// var vehicle model.Vehicle
+	// if err := db.Debug().Where("id=?", "82a068e3-2367-4db0-b551-731e6bfd4e3a").First(&vehicle).Error; err != nil {
+	// 	fmt.Println(err)
+	// }
+
+	// var customer model.Customer
+	// if err := db.Debug().Preload("UserCredential").Where("id=?", "8114e6c6-81b5-4896-8dff-ff67d7ae12d2").First(&customer).Error; err != nil {
+	// 	fmt.Println(err)
+	// }
+
+	// if err := db.Debug().Model(&vehicle).Association("Customers").Delete(&customer); err != nil {
+	// 	fmt.Println(err)
+	// }
+
+	// Customer mengupdate kendaraan yang tersimpan
+	// Kendaraan lama:
+
+	// var oldVehicle model.Vehicle
+	// if err := db.Debug().Where("id=?", "ddba8c27-49b9-4d71-8233-2ebf1de56551").First(&oldVehicle).Error; err != nil {
+	// 	fmt.Println(err)
+	// }
+
+	// var newVehicle model.Vehicle
+	// if err := db.Debug().Where("id=?", "82a068e3-2367-4db0-b551-731e6bfd4e3a").First(&newVehicle).Error; err != nil {
+	// 	fmt.Println(err)
+	// }
+
+	// var customer model.Customer
+	// if err := db.Debug().Preload("Vehicles").Where("id=?", "a688e737-39f7-4ec7-893a-65e78478580d").First(&customer).Error; err != nil {
+	// 	fmt.Println(err)
+	// }
+
+	// // ambil id vehicle lama dari slice customer.Vehicles
+	// var oldVehicleID string
+	// for _, v := range customer.Vehicles {
+	// 	if v.ID == oldVehicle.ID {
+	// 		oldVehicleID = v.ID
+	// 		break
+	// 	}
+	// }
+
+	// if oldVehicleID == "" {
+	// 	fmt.Println("vehicle not found in customer's vehicles")
+	// 	return
+	// }
+
+	// if err := db.Debug().Model(&customer).Association("Vehicles").Delete([]model.Vehicle{oldVehicle}); err != nil {
+	// 	fmt.Println(err)
+	// }
+
+	// // set ID baru pada vehicle yang akan diupdate
+	// newVehicle.ID = oldVehicleID
+
+	// if err := db.Debug().Model(&customer).Association("Vehicles").Append([]model.Vehicle{newVehicle}); err != nil {
+	// 	fmt.Println(err)
+	// }
+
+	var customer model.Customer
+	if err := db.Debug().Preload("Vehicles").Where("id=?", "a688e737-39f7-4ec7-893a-65e78478580d").First(&customer).Error; err != nil {
 		fmt.Println(err)
 	}
-
-	// Kemudian kita lakukan append
-	if err := db.Model(&vehicle).Association("Customers").Append(&newCustomer); err != nil {
+	var newVehicle model.Vehicle
+	if err := db.Debug().Where("id=?", "82a068e3-2367-4db0-b551-731e6bfd4e3a").First(&newVehicle).Error; err != nil {
+		fmt.Println(err)
+	}
+	var oldVehicleID = "ddba8c27-49b9-4d71-8233-2ebf1de56551"
+	var newVehicleSlice []model.Vehicle
+	for _, cv := range customer.Vehicles {
+		if cv.ID != oldVehicleID {
+			newVehicleSlice = append(newVehicleSlice, cv)
+		}
+	}
+	newVehicleSlice = append(newVehicleSlice, newVehicle)
+	if err := db.Debug().Model(&customer).Association("Vehicles").Replace(newVehicleSlice); err != nil {
 		fmt.Println(err)
 	}
 }
